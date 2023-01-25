@@ -1,3 +1,4 @@
+
 class Graph:
     def __init__(self, node_count: int, edge_count: int = 0, adj_list: list[list[int]] = []) -> None:
         self.node_count = node_count
@@ -74,19 +75,43 @@ class Graph:
         return True
     
     def complement(self):
-        # Inicializa o grafo complemento
-        complement = [[0 for i in range(len(self.adj_list)-1)] for j in range(len(self.adj_list)-1)]
-        # Para cada vértice do grafo original
-        for i in range(len(self.adj_list)-1):
-            # Para cada vértice não adjacente ao vértice atual
-            for j in range(len(self.adj_list)-1):
-                if i != j and self.adj_list[i] == 0:
-                    # Adiciona uma aresta no complemento
-                    complement[i][j] = 1
-        return complement
+        g2 = Graph(self.node_count, adj_list=[])
+        for u in range(len(self.adj_list)):
+            for i in range(self.node_count):
+                if i not in self.adj_list[u] and i !=u:
+                    g2.add_directed_edge(u,i)
+        return g2
 
     def subgraph(self, g2):
-        pass
+        if g2.node_count > self.node_count or g2.edge_count > self.edge_count:
+            return False
+        for u in range(len(g2.adj_list)):
+            for v in g2.adj_list[u]:
+                if v not in self.adj_list[u]:
+                    return False
+        return True
+
+    def bfs(self, s):
+        visited = []    #List to keep track of visited nodes.
+        queue = []     #Initialize a queue
+        visited.append(s)
+        queue.append(s)
+
+        while queue:
+            s = queue.pop(0) 
+            for i in range(len(self.adj_list)):
+                for neighbour in self.adj_list[i]:
+                    if neighbour not in visited:
+                        visited.append(neighbour)
+                        queue.append(neighbour) 
+        return visited
+
+    def conexo(self, visited):
+        tam = len(visited)
+        if visited!=self.edge_count:
+            return False
+        else:
+            return True
 
     def _str_(self):
         repr = ""
