@@ -1,9 +1,9 @@
-
 class Graph:
     def __init__(self, node_count: int, edge_count: int = 0, adj_list: list[list[int]] = []) -> None:
         self.node_count = node_count
         self.edge_count = edge_count
         self.adj_list = adj_list
+        self.is_connected = False
         if adj_list == []:
             for _ in range(self.node_count):
                 self.adj_list.append([])
@@ -31,55 +31,42 @@ class Graph:
     def highest_degree_out(self) -> int:
         max_degree_out = 0
         highest_degree_node = 0
-        for i in range(self.node_count):
-            degree_out_node_i = self.degree_out(i)
-            if max_degree_out < degree_out_node_i:
-                max_degree_out = degree_out_node_i
-                highest_degree_node = i
+        for u in range(self.node_count):
+            degree_out_node_u = self.degree_out(u)
+            if max_degree_out < degree_out_node_u:
+                max_degree_out = degree_out_node_u
+                highest_degree_node = u
         return highest_degree_node
 
     def highest_degree_in(self) -> int:
         max_degree_in = float("inf")
         highest_degree_node = 0
-        for i in range(self.node_count):
-            degree_in_node_i = self.degree_in(i)
-            if max_degree_in < degree_in_node_i:
-                max_degree_in = degree_in_node_i
-                highest_degree_node = i
+        for u in range(self.node_count):
+            degree_in_node_u = self.degree_in(u)
+            if max_degree_in < degree_in_node_u:
+                max_degree_in = degree_in_node_u
+                highest_degree_node = u
         return highest_degree_node
-    
+
     def density(self):
-        ''' Calculates the density of the graph: 
-            D = [E] / ([V] * ([V] - 1))'''
-        density = self.edge_count / (self.node_count * (self.node_count -1))
-        return density
+        return self.edge_count / (self.node_count * (self.node_count - 1))
 
-    def complete(self): 
-        '''[E] tem V-1 elementos'''
+    def complete(self):
+        return self.density() == 1
 
-        for i in range(len(self.adj_list)):
-            if(len(self.adj_list[i]) != self.node_count-1):
-                return False
-            return True
-
-        '''Melhores maneiras:'''
-        #return self.density()==1
-        #return self.edge_count == self.node_count * (self.node_count-1)
-        
     def regular(self):
-        '''Todos [E] são iguais'''
-        tamanho = len(self.adj_list[0])
-        for i in range(len(self.adj_list)):
-            if(len(self.adj_list[i]) != tamanho):
+        degree = len(self.adj_list[0])
+        for u in range(1, len(self.adj_list)):
+            if len(self.adj_list[u]) != degree:
                 return False
         return True
-    
+
     def complement(self):
         g2 = Graph(self.node_count, adj_list=[])
         for u in range(len(self.adj_list)):
-            for i in range(self.node_count):
-                if i not in self.adj_list[u] and i !=u:
-                    g2.add_directed_edge(u,i)
+            for v in range(self.node_count):
+                if v not in self.adj_list[u] and v != u:
+                    g2.add_undirected_edge(u, v)
         return g2
 
     def subgraph(self, g2):
@@ -91,29 +78,104 @@ class Graph:
                     return False
         return True
 
+
     def bfs(self, s):
-        visited = []    #List to keep track of visited nodes.
-        queue = []     #Initialize a queue
-        visited.append(s)
-        queue.append(s)
+        desc = [0 for v in range(self.node_count)]
+        Q = [s]
+        R = [s]
+        desc[s] = 1
+        while Q:
+            u = Q.pop(0)
+            for v in self.adj_list[u]:
+                if desc[v] == 0:
+                    Q.append(v)
+                    R.append(v)
+                    desc[v] = 1
 
-        while queue:
-            s = queue.pop(0) 
-            for i in range(len(self.adj_list)):
-                for neighbour in self.adj_list[i]:
-                    if neighbour not in visited:
-                        visited.append(neighbour)
-                        queue.append(neighbour) 
-        return visited
+        if len(R) == self.node_count:
+            self.is_connected = True
 
-    def conexo(self, visited):
-        tam = len(visited)
-        if visited!=self.edge_count:
+        return R
+
+    def connected(self):
+        return self.is_connected
+        
+    def is_neighbor(self, u, v):
+        return v in self.adj_list[u]
+
+    def to_adj_matrix(self):
+        adj_matrix = [[0 for _ in range(self.node_count)] for j in range(self.node_count)]
+        for i in range(self.node_count):
+            for j in self.adj_list[i]:
+                adj_matrix[i][j] = 1
+        return adj_matrix
+
+    def is_valid_walk(self, walk: list[int]): #passeio aberto
+        for i in range(len(walk) - 1):
+            if walk[i + 1] not in self.adj_list[walk[i]]:
+                return False
+        return True
+    
+
+    def is_closed(self, walk: list[int]): #passeio fechado
+        return walk[0] == walk[-1] 
+
+
+    def is_valid_path(self, path: list[int]): #caminho - nao repete vertice, nem aresta
+        if len(path) <= 1:
             return False
-        else:
-            return True
+        for i in range(len(path) - 1):
+            if path[i + 1] not in self.adj_list[path[i]] or path.count(path[i]) > 1 or path.count(path[i + 1]) > 1:
+                return False
+        return True
 
-    def _str_(self):
+    def degree_in_more_than(self, min_degree):
+        """Returns the set of nodes that have the in degree larger than max_degree"""
+        pass
+
+    def degree_out_more_than(self, min_degree):
+        """Returns the set of nodes that have the out degree larger than max_degree"""
+        pass
+
+    def nodes_having_in_degree(self, in_degree):
+        """Returns the number of nodes having the given in_degree"""
+        pass
+
+    def nodes_having_out_degree(self, out_degree):
+        """Returns the number of nodes having the given out_degree"""
+        pass
+
+    def diff_min_max_in_degree(self):
+        """Returns the difference between the maximum and minimum in degree"""
+        pass
+
+    def diff_min_max_out_degree(self):
+        """Returns the difference between the maximum and minimum out degree"""
+        pass
+
+    def is_directed(self):
+        """Returns True if graph is directed, and False otherwise"""
+        pass
+
+    def remove_directed_edge(self, u, v):
+        """Removes edge from u to v (and NOT from v to u)"""
+        pass
+
+    def remove_undirected_edge(self, u, v):
+        """Removes both edges from u to v and from v to u"""
+        pass
+
+    def add_node(self):
+        """Adds a new node (with no neighbors)"""
+        pass
+
+    def remove_node(self, u):
+        """Remove node u (also remove any edge from/to it) - nodes from u+1 and on should be updated accordingly"""
+        pass
+
+    # ...
+
+    def __str__(self):
         repr = ""
         for adj in self.adj_list:
             repr += str(adj) + "\n"
