@@ -46,9 +46,10 @@ class WeightedGraph:
 
         for _ in range(self.node_count - 1):
             for u in range(len(self.adj_list)):
-                for i in range(len(self.adj_list)):
-                    v = self.adj_list[u][i][0] #pega o vizinho
-                    w  = self.adj_list[u][i][1] #pega o peso
+                for (v,w) in self.adj_list[u]:
+                #for i in range(len(self.adj_list)):
+                    #v = self.adj_list[u][i][0] #pega o vizinho
+                    #w  = self.adj_list[u][i][1] #pega o peso
                     if dist[v] > dist[u]+w(u,v):
                         dist[v] = dist[u]+w(u,v)
                         pred[v] = u
