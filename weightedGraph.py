@@ -36,12 +36,8 @@ class WeightedGraph:
                     self.add_directed_edge(u, v, w)
 
     def bellman_ford(self, s):
-        dist = []
-        pred = []
-        for v in range(self.node_count):
-            dist[v] = float("inf")
-            pred[v] = None
-        
+        dist = [float("inf") for i in range(self.node_count)]
+        pred = [None for i in range(self.node_count)]
         dist[s]=0
 
         for _ in range(self.node_count - 1):
@@ -53,6 +49,8 @@ class WeightedGraph:
                     if dist[v] > dist[u]+w:
                         dist[v] = dist[u]+w
                         pred[v] = u
+
+        return (dist, pred)
 
 
 

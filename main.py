@@ -12,7 +12,7 @@ g2 = WeightedGraph(5)
 #g2.add_directed_edge(3, 4, 3)
 g2.read_file("toy.txt")
 print(g2.adj_list)
-
+print(g2.bellman_ford(0))
 
 '''
 # BFS AND CONNECTED (LESSON 3)
