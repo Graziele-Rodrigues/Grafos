@@ -96,6 +96,34 @@ class Graph:
             self.is_connected = True
 
         return R
+    
+    def dfs(self, s):
+        desc = [0 for v in range(self.node_count)]
+        S = [s]
+        R = [s]
+        desc[s] = 1
+        while len(S) !=0:
+            u = S[-1]
+            desempilhar = True
+            for v in self.adj_list[u]:
+                if desc[v] == 0:
+                    desempilhar = False
+                    S.append(v)
+                    R.append(v)
+                    desc[v] = 1
+                    break
+            if desempilhar:
+                S.pop()
+        return R
+  
+
+    def dfs_rec(self, s, R, desc):
+        R.append(s)
+        desc[s] = 1
+        for v in self.adj_list[s]:
+            if desc[v] == 0:
+                self.dfs_rec(v, R, desc)
+        return R
 
     def connected(self):
         return self.is_connected
@@ -129,52 +157,9 @@ class Graph:
                 return False
         return True
 
-    def degree_in_more_than(self, min_degree):
-        """Returns the set of nodes that have the in degree larger than max_degree"""
-        pass
+    
 
-    def degree_out_more_than(self, min_degree):
-        """Returns the set of nodes that have the out degree larger than max_degree"""
-        pass
-
-    def nodes_having_in_degree(self, in_degree):
-        """Returns the number of nodes having the given in_degree"""
-        pass
-
-    def nodes_having_out_degree(self, out_degree):
-        """Returns the number of nodes having the given out_degree"""
-        pass
-
-    def diff_min_max_in_degree(self):
-        """Returns the difference between the maximum and minimum in degree"""
-        pass
-
-    def diff_min_max_out_degree(self):
-        """Returns the difference between the maximum and minimum out degree"""
-        pass
-
-    def is_directed(self):
-        """Returns True if graph is directed, and False otherwise"""
-        pass
-
-    def remove_directed_edge(self, u, v):
-        """Removes edge from u to v (and NOT from v to u)"""
-        pass
-
-    def remove_undirected_edge(self, u, v):
-        """Removes both edges from u to v and from v to u"""
-        pass
-
-    def add_node(self):
-        """Adds a new node (with no neighbors)"""
-        pass
-
-    def remove_node(self, u):
-        """Remove node u (also remove any edge from/to it) - nodes from u+1 and on should be updated accordingly"""
-        pass
-
-    # ...
-
+   
     def __str__(self):
         repr = ""
         for adj in self.adj_list:

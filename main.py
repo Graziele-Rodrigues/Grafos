@@ -1,7 +1,20 @@
 from graph import Graph
+from weightedGraph import WeightedGraph
+
+g2 = WeightedGraph(5)
+#g2.add_directed_edge(0, 1, 6)
+#g2.add_directed_edge(0, 2, 2)
+#g2.add_directed_edge(1, 2, 3)
+#g2.add_directed_edge(1, 3, 1)
+#g2.add_directed_edge(1, 4, 3)
+#g2.add_directed_edge(2, 1, 2)
+#g2.add_directed_edge(2, 3, 5)
+#g2.add_directed_edge(3, 4, 3)
+g2.read_file("toy.txt")
+print(g2.adj_list)
 
 
-
+'''
 # BFS AND CONNECTED (LESSON 3)
 g1 = Graph(10, adj_list=[])
 g1.add_undirected_edge(0, 1)
@@ -31,7 +44,8 @@ g2.add_undirected_edge(0, 1)
 print("G2 IS SUBGRAPH OF G1?", g1.subgraph(g2))  # True
 
 print("BFS FROM 5:", g1.bfs(5))  # [5, 3, 4, 6, 2, 7, 9, 8]
-print("CONNECTED: ", g1.connected())
+print("DFS FROM 5:", g1.dfs(5))  # [5, 3, 2, 4, 6, 7, 8, 9]
+print("CONNECTED (conexo): ", g1.connected())
 print("NEIGHBOOR: ", g1.is_neighbor(1, 2))  # False
 print("NEIGHBOOR: ", g1.is_neighbor(2, 3))  # True
 print("MATRIZ: ", g1.to_adj_matrix())
@@ -44,7 +58,6 @@ print("CLOSED: ", g1.is_closed([2, 3, 5, 4]))  # False
 
 
 # EXERCISES
-'''
 print(g1.is_closed([0, 2, 3, 0]))  # True
 print(g1.is_closed([0, 2, 3]))  # False
 print(g1.degree_in_more_than(1))  # [0, 2]
