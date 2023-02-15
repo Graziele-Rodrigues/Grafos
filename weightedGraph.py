@@ -49,8 +49,44 @@ class WeightedGraph:
                     if dist[v] > dist[u]+w:
                         dist[v] = dist[u]+w
                         pred[v] = u
+                        swepped = True
+
+                if swepped==False:
+                    break
 
         return (dist, pred)
+    
+    
+    def min_dist_q(self, Q, dist):
+        min_dist = float("inf")
+        min_node = None
+        for node in Q:
+            if dist[node] < min_dist:
+                min_dist = dist[node]
+                min_node = node
+        #print(min_node)
+        return min_node
+    
+    def dijkstra(self, s):
+        dist = [float("inf") for i in range(self.node_count)]
+        pred = [None for i in range(self.node_count)]
+        dist[s]=0
+        Q = [v for v in range(self.node_count)]
+        while Q!=[]:
+            u = self.min_dist_q(Q, dist)
+            Q.remove(u)
+            for (v,w) in self.adj_list[u]:
+                if dist[v] > dist[u] + w:
+                    dist[v] = dist[u]+w
+                    pred[v] = u
+        return (dist, pred)
+
+
+
+    
+    
+
+
 
 
 

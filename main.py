@@ -1,6 +1,7 @@
 from graph import Graph
 from weightedGraph import WeightedGraph
 
+
 g2 = WeightedGraph(5)
 #g2.add_directed_edge(0, 1, 6)
 #g2.add_directed_edge(0, 2, 2)
@@ -10,9 +11,10 @@ g2 = WeightedGraph(5)
 #g2.add_directed_edge(2, 1, 2)
 #g2.add_directed_edge(2, 3, 5)
 #g2.add_directed_edge(3, 4, 3)
-g2.read_file("toy.txt")
+g2.read_file("data_sets/toy.txt")
 print(g2.adj_list)
-print(g2.bellman_ford(0))
+print("bellman_ford: ", g2.bellman_ford(0))
+print("dijkstra: ", g2.dijkstra(0))
 
 '''
 # BFS AND CONNECTED (LESSON 3)
